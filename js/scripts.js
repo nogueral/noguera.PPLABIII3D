@@ -2,12 +2,19 @@
 import { Anuncio_Auto } from "./anuncio.js";
 import {crearTabla} from "./dinamicas.js";
 
-const $divTabla = document.getElementById("divTabla");
-const autos = JSON.parse(localStorage.getItem("autos")) || [];
-console.log(autos);
-actualizarTabla();
+const $divTabla = document.getElementById("tabla");
+const url = "http://localhost:3000/anuncios";
+getAnunciosAjax();
 
 
+//asigno el evento change a los checkbox para que pueda actualizar la tabla cada vez que se modifican
+const checkbox = document.querySelectorAll(".traerDatos");
+
+checkbox.forEach((check) => {
+                
+    check.addEventListener("change", getAnunciosAjax);
+
+});
 
 window.addEventListener("click", (e)=>{
 
@@ -15,7 +22,7 @@ window.addEventListener("click", (e)=>{
 
         console.log(e.target.parentElement.dataset.id);
         let id = e.target.parentElement.dataset.id;
-        cargarFormulario(autos.find((auto)=> auto.id == id));
+        getAnuncioAjax(id);
     }else if(e.target.matches("#btnDelete")){
         handlerDelete(parseInt($formulario.txtId.value));
         $formulario.txtId.value = "";
@@ -25,7 +32,9 @@ window.addEventListener("click", (e)=>{
 });
 
 function cargarFormulario(auto){
+    console.log($formulario);
     const {txtId, titulo, transaccion, descripcion, precio, puertas, kms, potencia} = $formulario;
+    
     txtId.value = auto.id;
     titulo.value = auto.titulo;
     transaccion.value = auto.transaccion;
@@ -69,81 +78,111 @@ $formulario.addEventListener("submit", (e)=>{
     $formulario.reset();
 });
 
+const createAnuncioFetch = (nuevoAuto) => {
+
+    const options = {
+        method:"POST",
+        headers: {
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(nuevoAuto)
+    }
+    agregarSpinner();
+    fetch(url, options)
+    .then((res)=>res.ok ? res.json() : Promise.reject(`Error: ${res.status} : ${res.statusText}`))
+    .then((data)=>{
+
+        console.log(`${data.id}, ${data.nombre}, ${data.apellido}`);
+    })
+    .catch((err)=>{
+        console.error(err);
+    })
+    .finally(()=>{
+        eliminarSpinner();
+    });
+
+};
+
 const handlerCreate = (nuevoAuto)=>{
 
-    autos.push(nuevoAuto);
-    actualizarStorage(autos);
+    createAnuncioFetch(nuevoAuto);
+};
+
+const updateAnuncioFetch = (autoEditado) => {
+
+    const options = {
+        method:"PUT",
+        headers: {
+            "Content-Type":"application/json",
+        },
+        body:JSON.stringify(autoEditado)
+    }
     agregarSpinner();
-    setTimeout(()=>{
-        actualizarTabla();
+    fetch(url + "/" + autoEditado.id, options)
+    .then((res)=>res.ok ? res.json() : Promise.reject(`Error: ${res.status} : ${res.statusText}`))
+    .then((data)=>{
+
+        console.log(data);
+    })
+    .catch((err)=>{
+        console.error(err);
+    })
+    .finally(()=>{
         eliminarSpinner();
-    },2000);
-    //actualizarTabla();
+    });
+
 };
 
 const handlerUpdate = (autoEditado)=>{
-    let indice = autos.findIndex((auto)=>{
-        return auto.id == autoEditado.id;
-    });
 
-    if(confirm("Confirma modificacion?")){
-
-        autos.splice(indice, 1, autoEditado);
-        actualizarStorage(autos);
-        agregarSpinner();
-        setTimeout(()=>{
-            actualizarTabla();
-            eliminarSpinner();
-        },2000);
-
-    }
+    updateAnuncioFetch(autoEditado);
 
     const $submit = document.getElementsByClassName("submit")[0];
     $submit.value = "Guardar";
+
+};
+
+const deleteAnuncioFetch = (id) => {
+
+    const options = {
+        method:"DELETE"
+    }
+    agregarSpinner();
+    fetch(url + "/" + id, options)
+    .then((res)=>res.ok ? res.json() : Promise.reject(`Error: ${res.status} : ${res.statusText}`))
+    .then((data)=>{
+
+        console.log(data);
+    })
+    .catch((err)=>{
+        console.error(err);
+    })
+    .finally(()=>{
+        eliminarSpinner();
+    });
 
 };
 
 const handlerDelete = (id)=>{
 
-    let indice = autos.findIndex((auto)=>{
-        return auto.id == id;
-    });
-
-    if(confirm("Confirma eliminacion?")){
-
-        autos.splice(indice, 1);
-        actualizarStorage(autos);
-        agregarSpinner();
-        setTimeout(()=>{
-            actualizarTabla();
-            eliminarSpinner();
-        },2000);
-        
-    }
-
+    deleteAnuncioFetch(id);
+    //getAnunciosAjax();
     const $submit = document.getElementsByClassName("submit")[0];
     $submit.value = "Guardar";
 };
 
-function actualizarTabla(){
+function actualizarTabla(data){
 
     while($divTabla.hasChildNodes()){
         $divTabla.removeChild($divTabla.firstChild);
     }
 
-    const data = JSON.parse(localStorage.getItem("autos"));
     if(data){
-        data.sort(function(a,b){return b.precio - a.precio});
-        $divTabla.appendChild(crearTabla(autos));
+        $divTabla.appendChild(crearTabla(data));
     }
     
 };
 
-const actualizarStorage = (data)=>{
-
-    localStorage.setItem("autos", JSON.stringify(data));
-    
-};
 
 // No tocar
 
@@ -158,7 +197,7 @@ function agregarSpinner(){
 // No tocar
 
 function eliminarSpinner(){
-    //document.getElementById("spinner-container").innerHTML="";
+
 
     const $spinnerContainer = document.getElementById("spinner-container");
 
@@ -167,5 +206,135 @@ function eliminarSpinner(){
     }
 }
 
-//actualizarTabla(autos);
+function getAnuncioAjax(id){
 
+
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", ()=>{
+
+
+        if(xhr.readyState == 4){
+
+            if(xhr.status >=200 && xhr.status < 300){
+
+                const data = JSON.parse(xhr.responseText);
+                cargarFormulario(data);
+
+            } else {
+                
+                console.error(`Error: ${xhr.status} : ${xhr.statusText}`);
+            }
+
+            eliminarSpinner();
+
+        } else {
+
+            agregarSpinner();
+        }
+
+    });
+
+    xhr.open("GET", url + "/" + id);
+    xhr.send();
+
+};
+
+function getAnunciosAjax(){
+
+
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.addEventListener("readystatechange", ()=>{
+
+        if(xhr.readyState == 4){
+
+            if(xhr.status >=200 && xhr.status < 300){
+
+                const data = JSON.parse(xhr.responseText);
+
+                const checkbox = document.querySelectorAll(".traerDatos");
+
+                data.map((elemento)=>{
+
+                    checkbox.forEach(check => {
+                        if(check.checked == false){
+                            delete elemento[check.value];
+                        }
+                    });
+
+                    return elemento;
+                })
+
+                console.log(data);
+                actualizarTabla(data);
+
+            } else {
+                
+                console.error(`Error: ${xhr.status} : ${xhr.statusText}`);
+            }
+
+            eliminarSpinner();
+
+        } else {
+
+            agregarSpinner();
+        }
+    });
+
+    xhr.open("GET", url);
+    xhr.send();
+};
+
+// filtrar anuncios para calcular promedio 
+
+const select = document.getElementById("selectFiltros");
+const filtroPrecio = document.getElementById("filtroPrecio");
+
+select.addEventListener('change', () => {
+    
+    
+    console.log(select.value);
+
+    agregarSpinner();
+    fetch(url)
+    .then((res)=>res.ok ? res.json() : Promise.reject(`Error: ${res.status} : ${res.statusText}`))
+    .then((data)=>{
+
+        if(select.value != 'N/A'){
+            const anuncios = filtrarAnuncios(data, select.value);
+            console.log(anuncios);
+            const prom = calcularPromedio(anuncios);
+            console.log(prom);
+            filtroPrecio.value = parseFloat(prom);
+        }else{
+            filtroPrecio.value = 'N/A';
+        }
+        
+    })
+    .catch((err)=>{
+        console.error(err);
+    })
+    .finally(()=>{
+        eliminarSpinner();
+    });
+});
+
+function filtrarAnuncios(data, seleccion){
+
+    return data.filter(elemento => elemento.transaccion == seleccion);
+}
+
+function calcularPromedio(anuncios){
+  
+    let suma = anuncios.reduce((anterior, actual)=>{
+        let add = anterior + parseFloat(actual.precio);
+        console.log(add);
+        return add;
+    }, 0);
+
+    return Math.round(suma / anuncios.length);
+    
+    }

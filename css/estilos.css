@@ -11,6 +11,7 @@ body{
     align-items: center;
 }
 
+
 fieldset{
     display: flex;
     flex-direction: column;
@@ -67,20 +68,12 @@ input, select{
 }
 
 .submit, #btnDelete{
-    background-color: green;
-    color: white;
+   /* background-color: green;
+    color: white;*/
     height: 40px;
-    width: 85px;
+    width: 100px;
 }
 
-.submit{
-    background-image: url('../assets/save.svg');
-    background-position: left;
-    background-size: 15px;
-    background-repeat:no-repeat;
-    width: 80px;
-    text-align: right;
-}
 
 .imagen-encabezado{
     background-image: url('../assets/autosvarios.jpg');
@@ -115,10 +108,21 @@ thead{
     display: none;
 }
 
+.filtroDiv {
+    background-color: #eeeeee;
+  }
+
+  #spinner-container{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
 @media screen and (max-width: 500px) {
     .navegacion{
         flex-direction: column;
-        height: 160px;
+        height: 200px;
     }
 
     .itemsNav{
@@ -129,6 +133,7 @@ thead{
 
     footer{
         flex-direction: column;
+        height: 100px;
     }
 
     .fieldsetItems{

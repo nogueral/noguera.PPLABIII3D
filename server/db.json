@@ -1,0 +1,84 @@
+{
+  "anuncios": [
+    {
+      "id": 1,
+      "titulo": "Fiat 147 ( 1993 )",
+      "transaccion": "permuta",
+      "descripcion": "Buen estado , modelo BASE sin aire ni direccion , unico dueño",
+      "precio": "300000",
+      "puertas": "3",
+      "km": "47000",
+      "potencia": "98"
+    },
+    {
+      "id": 2,
+      "titulo": "Audi A4 ( 2018 )",
+      "transaccion": "venta",
+      "descripcion": "Como nuevo , tope de gama, unico dueño , nunca duerme a la intemperie",
+      "precio": "1004000",
+      "puertas": "3",
+      "km": "20000",
+      "potencia": "150"
+    },
+    {
+      "id": 3,
+      "titulo": "VW Gol G4 ( 2008 )",
+      "transaccion": "venta",
+      "descripcion": "Perfectas condiciones , inmaculado de chapa y pintura , mecánica excelente",
+      "precio": "550000",
+      "puertas": "3",
+      "km": "150000",
+      "potencia": "110"
+    },
+    {
+      "id": 4,
+      "titulo": "Suran Trendline ( 2015 )",
+      "transaccion": "alquiler",
+      "descripcion": "Mecanica excelente , tuvo dos choques",
+      "precio": "750000",
+      "puertas": "5",
+      "km": "75000",
+      "potencia": "110"
+    },
+    {
+      "id": 5,
+      "titulo": "Saveiro G4 Diesel (1.9SD)",
+      "transaccion": "venta",
+      "descripcion": "6/10 puntos de chapa , motor fundido",
+      "precio": "400000",
+      "puertas": "2",
+      "km": "450000",
+      "potencia": "64"
+    },
+    {
+      "id": 1637533925285,
+      "titulo": "Vw Vento (2012)",
+      "transaccion": "permuta",
+      "descripcion": "Excelente estado, aire y direccion",
+      "precio": "540000",
+      "puertas": "4",
+      "km": "108000",
+      "potencia": "250"
+    },
+    {
+      "id": 1637534094478,
+      "titulo": "Renault Clio (2012)",
+      "transaccion": "venta",
+      "descripcion": "Excelente estado",
+      "precio": "420000",
+      "puertas": "5",
+      "km": "120000",
+      "potencia": "98"
+    },
+    {
+      "id": 1637707172704,
+      "titulo": "Renault Sandero 2011",
+      "transaccion": "venta",
+      "descripcion": "Excelente estado",
+      "precio": "530000",
+      "puertas": "5",
+      "km": "80000",
+      "potencia": "110"
+    }
+  ]
+}

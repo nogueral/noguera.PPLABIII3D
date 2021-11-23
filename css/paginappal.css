@@ -10,6 +10,12 @@ header{
     justify-content: space-between;
 }
 
+#spinner-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #encabezado{
     display: flex;
     flex-direction: row;

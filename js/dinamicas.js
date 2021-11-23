@@ -1,12 +1,20 @@
 
 export const crearTabla = (data)=>{
 
+    const checkbox = document.querySelectorAll(".traerDatos");
+    //console.log(checkbox);
+    
     const tabla = document.createElement("table");
     const thead = document.createElement("thead");
     const tbody = document.createElement("tbody");
 
+    tabla.classList.add("table");
+    tabla.classList.add("table-bordered");
+    tabla.classList.add("table-striped");
+    tabla.classList.add("table-dark");
+    tabla.classList.add("table-hover");
+
     const cabecera = document.createElement("tr");
-    cabecera.style.backgroundColor = "coral";
     //cargo el thead
     for (const key in data[0]) {
 
@@ -14,8 +22,12 @@ export const crearTabla = (data)=>{
             const th = document.createElement("th");
             //metodo
             const contenido = document.createTextNode(key);
+
             th.appendChild(contenido);
+
+
             cabecera.appendChild(th);
+
         }
 
     }
@@ -24,10 +36,11 @@ export const crearTabla = (data)=>{
     tabla.appendChild(thead);
 
     //cargo el tbody
-    data.forEach((element, index) => {
+    data.forEach((element) => {
         const tr = document.createElement("tr");
 
         for (const key in element) {
+            
 
             if(key === "id"){
                 tr.setAttribute("data-id", element[key]);
@@ -35,18 +48,14 @@ export const crearTabla = (data)=>{
                 //propiedad
                 const td = document.createElement("td");
                 td.textContent = element[key];
-                //td.innerText = element[key]; se usa solo p Explorer
+
+
                 tr.appendChild(td);
             }
 
         }
 
         tbody.appendChild(tr);
-
-        if(index % 2){
-            //tr.style.backgroundColor = "#ccc";
-            tr.setAttribute("style", "background-color:#ccc");
-        }
 
     });
 
